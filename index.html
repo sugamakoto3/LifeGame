@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Life Game</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <section class="life-game">
+      <h2>Beacon</h2>
+      <div class="toolbar">
+        <div>
+          生成:
+          <button>8x8</button>
+        </div>
+        <div>
+          Rule: B3/S23
+        </div>
+        <div>
+          <button class="lg-create-button"><</button>
+          <button>II</button>
+          <button class="lg-step-button">></button>
+        </div>
+      </div>
+      <div class="lg-board" style="grid-template-columns: repeat(5, min-content); grid-template-rows: repeat(5, min-content);">
+        <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div>
+      </div>
+      <div class="lg-status-bar">
+        status: 1
+      </div>
+    </section>
+    <!-- javascript -->
+    <script src="./index.js" type="module"></script>
+  </body>
+</html>
