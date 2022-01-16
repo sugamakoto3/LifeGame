@@ -6,17 +6,43 @@ export class App {
     mount() {
         this.boardElement = this.rootElement.querySelector(".lg-board");
         // mount toolbar
+        let intervalID = null;
+        const createElement = this.rootElement.querySelector(".lg-create-button");
+        createElement.addEventListener("click", () => {
+            clearInterval(intervalID);
+            this.initBoard();
+        });
+        const playElement = this.rootElement.querySelector(".lg-play-button");
+        playElement.addEventListener("click", () => {
+            this.step();
+            intervalID = setInterval(() => this.step(), 500);
+        });
+        const pauseElement = this.rootElement.querySelector(".lg-pause-button");
+        pauseElement.addEventListener("click", () => clearInterval(intervalID));
         const stepElement = this.rootElement.querySelector(".lg-step-button");
         stepElement.addEventListener("click", () => this.step());
-        const createElement = this.rootElement.querySelector(".lg-create-button");
-        createElement.addEventListener("click", () => this.initBoard());
+        //
+        this.boardElement.addEventListener("mousedown", (event) => {
+            if (event.buttons !== 1) return;
+            if (event.target.classList.contains("lg-board")) return;
+            const x = Number(event.target.dataset.x);
+            const y = Number(event.target.dataset.y);
+            this.toggleCell(x, y);
+        });
+        this.boardElement.addEventListener("mouseenter", (event) => {
+            if (event.buttons !== 1) return;
+            if (event.target.classList.contains("lg-board")) return;
+            const x = Number(event.target.dataset.x);
+            const y = Number(event.target.dataset.y);
+            this.toggleCell(x, y);
+        }, {capture: true});
         // init board
         this.initBoard();
     }
 
     initBoard() {
-        this.mx = 16;    // TODO
-        this.my = 16;
+        this.mx = 25;    // TODO
+        this.my = 25;
         this._cells = new Array(this.mx).fill().map(() => new Array(this.my).fill());
         // init boardElement
         this.boardElement.style["grid-template-columns"] = `repeat(${this.mx}, min-content)`;
@@ -25,8 +51,9 @@ export class App {
         for (let j = 0; j < this.my; j++) {
             for (let i = 0; i < this.mx; i++) {
                 const cellElement = document.createElement("div");
+                cellElement.dataset.x = i;
+                cellElement.dataset.y = j;
                 cellElement.dataset.around = "0";
-                cellElement.addEventListener("click", () => this.toggleCell(i, j));
                 // append
                 this.boardElement.appendChild(cellElement);
                 this._cells[i][j] = cellElement;
