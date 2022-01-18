@@ -27,7 +27,13 @@ export class App {
         });
         const stepElement = this.rootElement.querySelector(".lg-step-button");
         stepElement.addEventListener("click", () => this.step());
-        //
+        this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
+            const codeTextElement = this.rootElement.querySelector(".lg-code-text");
+            codeTextElement.value = this.encoding();
+            codeTextElement.focus();
+            codeTextElement.setSelectionRange(0,-1);
+        });
+        // mouse Event
         this.boardElement.addEventListener("mousedown", (event) => {
             if (event.buttons !== 1) return;
             if (event.target.classList.contains("lg-board")) return;
@@ -130,6 +136,14 @@ export class App {
             if (ny < 0 || this.my <= ny) continue;
             this._neighborMatrix[nx][ny] = this._neighborMatrix[nx][ny] + (isBorn ? 1 : -1);
         }
+    }
+
+    encoding() {
+        let res = this._cells;
+        res = res.map(c => c.classList.contains("lg-alive-cell"));
+        res = res.map(b => b ? 1n : 0n);
+        res = res.reduce((pre, cur) => (pre << 1n) + cur, 1n);
+        return this.mx + "x" + res.toString(16);
     }
 }
 
