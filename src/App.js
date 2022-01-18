@@ -7,6 +7,21 @@ export class App {
         this.boardElement = this.rootElement.querySelector(".lg-board");
         // mount toolbar
         let intervalID = null;
+        const playElement = this.rootElement.querySelector(".lg-play-button");
+        const pauseElement = this.rootElement.querySelector(".lg-pause-button");
+        playElement.addEventListener("click", () => {
+            if(intervalID !== null) return;
+            this.step();
+            intervalID = setInterval(() => this.step(), 500);
+            pauseElement.focus();
+        });
+        pauseElement.addEventListener("click", () => {
+            clearInterval(intervalID);
+            intervalID = null;
+            playElement.focus();
+        });
+        const stepElement = this.rootElement.querySelector(".lg-step-button");
+        stepElement.addEventListener("click", () => this.step());
         const createElement = this.rootElement.querySelector(".lg-create-button");
         createElement.addEventListener("click", () => {
             clearInterval(intervalID);
@@ -17,19 +32,6 @@ export class App {
             this.createBoard(...size);
             this.initBoard();
         });
-        const playElement = this.rootElement.querySelector(".lg-play-button");
-        playElement.addEventListener("click", () => {
-            if(intervalID !== null) return;
-            this.step();
-            intervalID = setInterval(() => this.step(), 500);
-        });
-        const pauseElement = this.rootElement.querySelector(".lg-pause-button");
-        pauseElement.addEventListener("click", () => {
-            clearInterval(intervalID);
-            intervalID = null;
-        });
-        const stepElement = this.rootElement.querySelector(".lg-step-button");
-        stepElement.addEventListener("click", () => this.step());
         this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
             codeTextElement.value = this.encoding();
