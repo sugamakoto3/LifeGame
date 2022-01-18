@@ -11,7 +11,10 @@ export class App {
         createElement.addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
-            this.createBoard(11, 11);
+            //
+            let size = this.rootElement.querySelector(".lg-size-text").value;
+            size = size.split("x").map(Number);
+            this.createBoard(...size);
             this.initBoard();
         });
         const playElement = this.rootElement.querySelector(".lg-play-button");
@@ -144,6 +147,12 @@ export class App {
         res = res.map(b => b ? 1n : 0n);
         res = res.reduce((pre, cur) => (pre << 1n) + cur, 1n);
         return this.mx + "x" + this.my + "x" + res.toString(16);
+    }
+
+    static initBoardHTML() {
+        const searchParams = new URLSearchParams(location.search);
+        if (! searchParams.has("code")) return;
+        App.decoding(searchParams.get("code"));
     }
 
     static decoding(code) {
