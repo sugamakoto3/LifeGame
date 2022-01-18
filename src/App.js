@@ -11,6 +11,7 @@ export class App {
         createElement.addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
+            this.createBoard(11, 11);
             this.initBoard();
         });
         const playElement = this.rootElement.querySelector(".lg-play-button");
@@ -40,44 +41,44 @@ export class App {
             this.toggleCell(x, y);
         }, {capture: true});
         // init board
-        this.createBoard(25, 25);
+        this.initBoard();
     }
 
     initBoard() {
+        this.mx = Number(this.boardElement.style["grid-template-columns"].match(/\d+/)[0]);
+        this.my = Number(this.boardElement.style["grid-template-rows"].match(/\d+/)[0]);
+        //TODO check number
+        // init _cells
         this._cells = new Array(this.mx * this.my).fill();
-        // 
-        this.mx = this.boardElement.style["grid-template-columns"];
-        // FIXME
-        //
-        this.boardElement.innerHTML = "";
-        for (let j = 0; j < this.my; j++) {
-            for (let i = 0; i < this.mx; i++) {
-                const cellElement = document.createElement("div");
-                cellElement.dataset.around = "0";
-                // append
-                this.boardElement.appendChild(cellElement);
-                this._cells[j*this.mx + i] = cellElement;
+        let i = 0;
+        for (const cellElement of this.boardElement.children) {
+            this._cells[i++] = cellElement;
+        }
+        // init _neighborNumMatrix
+        this._neighborMatrix = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
+        for (let i = 0; i < this.mx; i++) {
+            for (let j = 0; j < this.my; j++) {
+                if (! this.getCell(i, j).classList.contains("lg-alive-cell")) continue;
+                for (const d of neighborhoodDVs) {
+                    const nx = i+d.x;
+                    const ny = j+d.y;
+                    if (nx < 0 || this.mx <= nx) continue;
+                    if (ny < 0 || this.my <= ny) continue;
+                    this._neighborMatrix[nx][ny]++;
+                }
             }
         }
     }
 
     createBoard(mx, my) {
-        this.mx = mx;
-        this.my = my;
-        this._cells = new Array(this.mx * this.my).fill();
         // init boardElement
-        this.boardElement.style["grid-template-columns"] = `repeat(${this.mx}, min-content)`;
-        this.boardElement.style["grid-template-rows"] = `repeat(${this.my}, min-content)`;
-        //
+        this.boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
+        this.boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
+        // clear and create
         this.boardElement.innerHTML = "";
-        for (let j = 0; j < this.my; j++) {
-            for (let i = 0; i < this.mx; i++) {
-                const cellElement = document.createElement("div");
-                cellElement.dataset.around = "0";
-                // append
-                this.boardElement.appendChild(cellElement);
-                this._cells[j*this.mx + i] = cellElement;
-            }
+        for (let i = 0; i < mx*my; i++) {
+            const cellElement = document.createElement("div");
+            this.boardElement.appendChild(cellElement);
         }
     }
 
@@ -93,22 +94,18 @@ export class App {
     }
 
     step() {
-        const bornRule = Array.from("B3");     // TODO
-        const surviveRule = Array.from("S23");
-        // aroundMatrix を覚えておく
-        const aroundMatrix = new Array(this.mx).fill().map(() => new Array(this.my));
-        for (let i = 0; i < this.mx; i++) {
-            for (let j = 0; j < this.my; j++) {
-                aroundMatrix[i][j] = this.getCell(i, j).dataset.around;
-            }
-        }
+        const bornRule = Array.from("B3").map(Number);     // TODO
+        const surviveRule = Array.from("S23").map(Number);
+        // _neighborMatrix を覚えておく
+        const oldMatrix = new Array(this.mx).fill()
+            .map((_, i) => this._neighborMatrix[i].slice());
         //
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
-                const around = aroundMatrix[i][j];
-                if (bornRule.includes(around)) {
+                const neighbor = oldMatrix[i][j];
+                if (bornRule.includes(neighbor)) {
                     this.changeCell(i, j, true);
-                } else if (surviveRule.includes(around)) {
+                } else if (surviveRule.includes(neighbor)) {
                 } else {
                     this.changeCell(i, j, false);
                 }
@@ -125,18 +122,18 @@ export class App {
         const cellElement = this.getCell(x, y);
         if (isBorn === cellElement.classList.contains("lg-alive-cell")) return;
         cellElement.classList.toggle("lg-alive-cell");
-        for (const d of neighborhoods) {
+        // neibor
+        for (const d of neighborhoodDVs) {
             const nx = x+d.x;
             const ny = y+d.y;
             if (nx < 0 || this.mx <= nx) continue;
             if (ny < 0 || this.my <= ny) continue;
-            const cellElement = this.getCell(nx, ny);
-            cellElement.dataset.around = Number(cellElement.dataset.around) + (isBorn ? 1 : -1);
+            this._neighborMatrix[nx][ny] = this._neighborMatrix[nx][ny] + (isBorn ? 1 : -1);
         }
     }
 }
 
-const neighborhoods = Array.from(Array(3*3).keys())
+const neighborhoodDVs = Array.from(Array(3*3).keys())
     .filter(i => i!==4)
     .map(i => { return {"x": i%3-1, "y": Math.floor(i/3)-1}; });
 
