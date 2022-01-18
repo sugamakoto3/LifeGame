@@ -30,15 +30,13 @@ export class App {
         this.boardElement.addEventListener("mousedown", (event) => {
             if (event.buttons !== 1) return;
             if (event.target.classList.contains("lg-board")) return;
-            const x = Number(event.target.dataset.x);
-            const y = Number(event.target.dataset.y);
+            const [x, y] = this.getXYFromCell(event.target);
             this.toggleCell(x, y);
         });
         this.boardElement.addEventListener("mouseenter", (event) => {
             if (event.buttons !== 1) return;
             if (event.target.classList.contains("lg-board")) return;
-            const x = Number(event.target.dataset.x);
-            const y = Number(event.target.dataset.y);
+            const [x, y] = this.getXYFromCell(event.target);
             this.toggleCell(x, y);
         }, {capture: true});
         // init board
@@ -55,8 +53,6 @@ export class App {
         for (let j = 0; j < this.my; j++) {
             for (let i = 0; i < this.mx; i++) {
                 const cellElement = document.createElement("div");
-                cellElement.dataset.x = i;
-                cellElement.dataset.y = j;
                 cellElement.dataset.around = "0";
                 // append
                 this.boardElement.appendChild(cellElement);
@@ -77,8 +73,6 @@ export class App {
         for (let j = 0; j < this.my; j++) {
             for (let i = 0; i < this.mx; i++) {
                 const cellElement = document.createElement("div");
-                cellElement.dataset.x = i;
-                cellElement.dataset.y = j;
                 cellElement.dataset.around = "0";
                 // append
                 this.boardElement.appendChild(cellElement);
@@ -89,6 +83,13 @@ export class App {
 
     getCell(x, y) {
         return this._cells[y*this.mx + x];
+    }
+
+    getXYFromCell(cellElement) {
+        const index = this._cells.indexOf(cellElement);
+        const x = index % this.mx;
+        const y = Math.floor(index / this.mx);
+        return [x, y];
     }
 
     step() {
