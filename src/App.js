@@ -21,7 +21,11 @@ export class App {
             playElement.focus();
         });
         const stepElement = this.rootElement.querySelector(".lg-step-button");
-        stepElement.addEventListener("click", () => this.step());
+        stepElement.addEventListener("click", () => {
+            this.step();
+            clearInterval(intervalID);
+            intervalID = null;
+        });
         const createElement = this.rootElement.querySelector(".lg-create-button");
         createElement.addEventListener("click", () => {
             clearInterval(intervalID);
