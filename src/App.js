@@ -143,7 +143,28 @@ export class App {
         res = res.map(c => c.classList.contains("lg-alive-cell"));
         res = res.map(b => b ? 1n : 0n);
         res = res.reduce((pre, cur) => (pre << 1n) + cur, 1n);
-        return this.mx + "x" + res.toString(16);
+        return this.mx + "x" + this.my + "x" + res.toString(16);
+    }
+
+    static decoding(code) {
+        const rootElement = document.querySelector(".life-game");
+        const boardElement = rootElement.querySelector(".lg-board");
+        //
+        let [mx, my, cells] = code.split("x");
+        cells = BigInt("0x" + cells);
+        cells = cells.toString(2);
+        cells = Array.prototype.map.call(cells, s => Boolean(Number(s)));
+        cells.shift();
+        // init boardElement
+        boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
+        boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
+        // clear and create
+        boardElement.innerHTML = "";
+        for (const isBorn of cells) {
+            const cellElement = document.createElement("div");
+            if (isBorn) cellElement.classList.add("lg-alive-cell");
+            boardElement.appendChild(cellElement);
+        }
     }
 }
 
