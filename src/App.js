@@ -42,16 +42,15 @@ export class App {
             this.toggleCell(x, y);
         }, {capture: true});
         // init board
-        this.initBoard();
+        this.createBoard(25, 25);
     }
 
     initBoard() {
-        this.mx = 25;    // TODO
-        this.my = 25;
-        this._cells = new Array(this.mx).fill().map(() => new Array(this.my).fill());
-        // init boardElement
-        this.boardElement.style["grid-template-columns"] = `repeat(${this.mx}, min-content)`;
-        this.boardElement.style["grid-template-rows"] = `repeat(${this.my}, min-content)`;
+        this._cells = new Array(this.mx * this.my).fill();
+        // 
+        this.mx = this.boardElement.style["grid-template-columns"];
+        // FIXME
+        //
         this.boardElement.innerHTML = "";
         for (let j = 0; j < this.my; j++) {
             for (let i = 0; i < this.mx; i++) {
@@ -61,9 +60,35 @@ export class App {
                 cellElement.dataset.around = "0";
                 // append
                 this.boardElement.appendChild(cellElement);
-                this._cells[i][j] = cellElement;
+                this._cells[j*this.mx + i] = cellElement;
             }
         }
+    }
+
+    createBoard(mx, my) {
+        this.mx = mx;
+        this.my = my;
+        this._cells = new Array(this.mx * this.my).fill();
+        // init boardElement
+        this.boardElement.style["grid-template-columns"] = `repeat(${this.mx}, min-content)`;
+        this.boardElement.style["grid-template-rows"] = `repeat(${this.my}, min-content)`;
+        //
+        this.boardElement.innerHTML = "";
+        for (let j = 0; j < this.my; j++) {
+            for (let i = 0; i < this.mx; i++) {
+                const cellElement = document.createElement("div");
+                cellElement.dataset.x = i;
+                cellElement.dataset.y = j;
+                cellElement.dataset.around = "0";
+                // append
+                this.boardElement.appendChild(cellElement);
+                this._cells[j*this.mx + i] = cellElement;
+            }
+        }
+    }
+
+    getCell(x, y) {
+        return this._cells[y*this.mx + x];
     }
 
     step() {
@@ -73,7 +98,7 @@ export class App {
         const aroundMatrix = new Array(this.mx).fill().map(() => new Array(this.my));
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
-                aroundMatrix[i][j] = this._cells[i][j].dataset.around;
+                aroundMatrix[i][j] = this.getCell(i, j).dataset.around;
             }
         }
         //
@@ -91,12 +116,12 @@ export class App {
     }
 
     toggleCell(x, y) {
-        const isBorn = !this._cells[x][y].classList.contains("lg-alive-cell");
+        const isBorn = !this.getCell(x, y).classList.contains("lg-alive-cell");
         this.changeCell(x, y, isBorn);
     }
 
     changeCell(x, y, isBorn) {
-        const cellElement = this._cells[x][y];
+        const cellElement = this.getCell(x, y);
         if (isBorn === cellElement.classList.contains("lg-alive-cell")) return;
         cellElement.classList.toggle("lg-alive-cell");
         for (const d of neighborhoods) {
@@ -104,7 +129,7 @@ export class App {
             const ny = y+d.y;
             if (nx < 0 || this.mx <= nx) continue;
             if (ny < 0 || this.my <= ny) continue;
-            const cellElement = this._cells[nx][ny];
+            const cellElement = this.getCell(nx, ny);
             cellElement.dataset.around = Number(cellElement.dataset.around) + (isBorn ? 1 : -1);
         }
     }
