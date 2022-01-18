@@ -32,6 +32,13 @@ export class App {
             this.createBoard(...size);
             this.initBoard();
         });
+        this.rootElement.querySelector(".lg-reset-button").addEventListener("click", () => {
+            clearInterval(intervalID);
+            intervalID = null;
+            //
+            this.createBoard(this.mx, this.my);
+            this.initBoard();
+        });
         this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
             codeTextElement.value = this.encoding();
