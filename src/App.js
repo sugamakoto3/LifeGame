@@ -5,7 +5,7 @@ export class App {
 
     mount() {
         this.boardElement = this.rootElement.querySelector(".lg-board");
-        // mount toolbar
+        // Mount toolbar
         let intervalID = null;
         const playElement = this.rootElement.querySelector(".lg-play-button");
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
@@ -20,27 +20,26 @@ export class App {
             intervalID = null;
             playElement.focus();
         });
-        const stepElement = this.rootElement.querySelector(".lg-step-button");
-        stepElement.addEventListener("click", () => {
+        playElement.focus();
+        this.rootElement.querySelector(".lg-step-button").addEventListener("click", () => {
             this.step();
             clearInterval(intervalID);
             intervalID = null;
         });
-        const createElement = this.rootElement.querySelector(".lg-create-button");
-        createElement.addEventListener("click", () => {
+        this.rootElement.querySelector(".lg-create-button").addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
             //
             const mx = Number(this.rootElement.querySelector(".lg-mx-text").value);
             const my = Number(this.rootElement.querySelector(".lg-my-text").value);
-            this.createBoard(mx, my);
+            this.recreateBoardElement(mx, my);
             this.initBoard();
         });
         this.rootElement.querySelector(".lg-reset-button").addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
             //
-            this.createBoard(this.mx, this.my);
+            this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
         });
         this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
@@ -66,6 +65,9 @@ export class App {
         this.initBoard();
     }
 
+    /**
+     * View（HTML）を見て、Model（に相当するプロパティ）を初期化する。
+     */
     initBoard() {
         this.mx = Number(this.boardElement.style["grid-template-columns"].match(/\d+/)[0]);
         this.my = Number(this.boardElement.style["grid-template-rows"].match(/\d+/)[0]);
@@ -92,7 +94,10 @@ export class App {
         }
     }
 
-    createBoard(mx, my) {
+    /**
+     * HTMLだけしかみない。
+     */
+    recreateBoardElement(mx, my) {
         // init boardElement
         this.boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
         this.boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
@@ -103,6 +108,25 @@ export class App {
             this.boardElement.appendChild(cellElement);
         }
     }
+
+    // createBoardElement(mx, my) {
+    //     // init boardElement
+    //     this.boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
+    //     this.boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
+    //     // create
+    //     const diff = (mx*my) - this.boardElement.children.length;
+    //     if (diff < 0) {
+    //         for (let i = 0; i < -diff; i++) {
+    //             //TODO 行と列ごとに'あれ'する
+    //             this.boardElement.removeChild(this.boardElement.lastChild);
+    //         }
+    //     } else {
+    //         for (let i = 0; i < diff; i++) {
+    //             const cellElement = document.createElement("div");
+    //             this.boardElement.appendChild(cellElement);
+    //         }
+    //     }
+    // }
 
     getCell(x, y) {
         return this._cells[y*this.mx + x];
