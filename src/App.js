@@ -31,9 +31,9 @@ export class App {
             clearInterval(intervalID);
             intervalID = null;
             //
-            let size = this.rootElement.querySelector(".lg-size-text").value;
-            size = size.split("x").map(Number);
-            this.createBoard(...size);
+            const mx = Number(this.rootElement.querySelector(".lg-mx-text").value);
+            const my = Number(this.rootElement.querySelector(".lg-my-text").value);
+            this.createBoard(mx, my);
             this.initBoard();
         });
         this.rootElement.querySelector(".lg-reset-button").addEventListener("click", () => {

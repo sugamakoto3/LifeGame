@@ -23,11 +23,25 @@ body {
     0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
+/* .toolbar */
+
+.toolbar > div {
+    display: flex;
+    justify-content: center;
+}
+
+.lg-mx-text,
+.lg-my-text {
+    width: 2.5em;
+}
+
+/* .lg-board */
+
 .lg-board {
     display: grid;
     border: 1px solid black;
     width: min-content;
-    margin: 0 auto;
+    margin: 0.83em auto;
 }
 
 .lg-board > div {
