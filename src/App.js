@@ -81,9 +81,9 @@ export class App {
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
                 if (! this.getCell(i, j).classList.contains("lg-alive-cell")) continue;
-                for (const d of neighborhoodDVs) {
-                    const nx = i+d.x;
-                    const ny = j+d.y;
+                for (const [dx, dy] of _aroundVectors) {
+                    const nx = i+dx;
+                    const ny = j+dy;
                     if (nx < 0 || this.mx <= nx) continue;
                     if (ny < 0 || this.my <= ny) continue;
                     this._neighborMatrix[nx][ny]++;
@@ -145,9 +145,9 @@ export class App {
         if (isBorn === cellElement.classList.contains("lg-alive-cell")) return;
         cellElement.classList.toggle("lg-alive-cell");
         // neibor
-        for (const d of neighborhoodDVs) {
-            const nx = x+d.x;
-            const ny = y+d.y;
+        for (const [dx, dy] of _aroundVectors) {
+            const nx = x+dx;
+            const ny = y+dy;
             if (nx < 0 || this.mx <= nx) continue;
             if (ny < 0 || this.my <= ny) continue;
             this._neighborMatrix[nx][ny] = this._neighborMatrix[nx][ny] + (isBorn ? 1 : -1);
@@ -190,9 +190,12 @@ export class App {
     }
 }
 
-const neighborhoodDVs = Array.from(Array(3*3).keys())
+
+const _aroundVectors = Array.from(new Array(9).keys())
     .filter(i => i!==4)
-    .map(i => { return {"x": i%3-1, "y": Math.floor(i/3)-1}; });
+    .map(i => [(i%3), Math.floor(i/3)])
+    .map(([dx, dy]) => [dx-1, dy-1])
+    ;
 
 
 
