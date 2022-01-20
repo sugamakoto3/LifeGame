@@ -47,13 +47,13 @@ export class App {
             this.recreateBoardElement(mx, my);
             this.initBoard();
         });
-        this.rootElement.querySelector(".lg-reset-button").addEventListener("click", () => {
+        this.rootElement.querySelectorAll(".lg-reset-button").forEach(e => e.addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
             //
             this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
-        });
+        }));
         this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
             codeTextElement.value = this.encoding();
