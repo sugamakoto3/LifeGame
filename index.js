@@ -1,4 +1,4 @@
 import { App } from "./src/App.js";
 const app = new App();
-App.initBoardHTML();
+App.loadBoardHTML();
 app.mount();

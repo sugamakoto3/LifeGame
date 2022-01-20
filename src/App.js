@@ -91,7 +91,7 @@ export class App {
             this._cells[i++] = cellElement;
         }
         // init _neighborNumMatrix
-        this._neighborMatrix = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
+        this._neighborsMatrix = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
                 if (! this.getCell(i, j).classList.contains("lg-alive-cell")) continue;
@@ -100,7 +100,7 @@ export class App {
                     const ny = j+dy;
                     if (nx < 0 || this.mx <= nx) continue;
                     if (ny < 0 || this.my <= ny) continue;
-                    this._neighborMatrix[nx][ny]++;
+                    this._neighborsMatrix[nx][ny]++;
                 }
             }
         }
@@ -149,7 +149,7 @@ export class App {
         const surviveRule = Array.from("S23").map(Number);
         // _neighborMatrix を覚えておく
         const oldMatrix = new Array(this.mx).fill()
-            .map((_, i) => this._neighborMatrix[i].slice());
+            .map((_, i) => this._neighborsMatrix[i].slice());
         //
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
@@ -179,7 +179,7 @@ export class App {
             const ny = y+dy;
             if (nx < 0 || this.mx <= nx) continue;
             if (ny < 0 || this.my <= ny) continue;
-            this._neighborMatrix[nx][ny] = this._neighborMatrix[nx][ny] + (isBorn ? 1 : -1);
+            this._neighborsMatrix[nx][ny] = this._neighborsMatrix[nx][ny] + (isBorn ? 1 : -1);
         }
     }
 
@@ -191,7 +191,7 @@ export class App {
         return this.mx + "x" + this.my + "x" + res.toString(16);
     }
 
-    static initBoardHTML() {
+    static loadBoardHTML() {
         const searchParams = new URLSearchParams(location.search);
         if (! searchParams.has("code")) return;
         App.decoding(searchParams.get("code"));
