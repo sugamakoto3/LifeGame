@@ -1,14 +1,26 @@
 export class App {
     constructor() {
         this.rootElement = document.querySelector(".life-game");    // TODO 引数から初期化する
+        //
+        const that = this;
+        this._cells = new Array();
+        /**
+         * cellElementから呼ばれる。
+         */
+        this._getXY = function() {
+            const index = that._cells.indexOf(this);
+            const x = index % that.mx;
+            const y = Math.floor(index / that.mx);
+            return [x, y];
+        };
     }
 
     mount() {
         this.boardElement = this.rootElement.querySelector(".lg-board");
         // Mount toolbar
-        let intervalID = null;
         const playElement = this.rootElement.querySelector(".lg-play-button");
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
+        let intervalID = null;
         playElement.addEventListener("click", () => {
             if(intervalID !== null) return;
             this.step();
@@ -52,13 +64,13 @@ export class App {
         this.boardElement.addEventListener("mousedown", (event) => {
             if (event.buttons !== 1) return;
             if (event.target.classList.contains("lg-board")) return;
-            const [x, y] = this.getXYFromCell(event.target);
+            const [x, y] = this._getXY.call(event.target);
             this.toggleCell(x, y);
         });
         this.boardElement.addEventListener("mouseenter", (event) => {
             if (event.buttons !== 1) return;
             if (event.target.classList.contains("lg-board")) return;
-            const [x, y] = this.getXYFromCell(event.target);
+            const [x, y] = this._getXY.call(event.target);
             this.toggleCell(x, y);
         }, {capture: true});
         // init board
@@ -130,13 +142,6 @@ export class App {
 
     getCell(x, y) {
         return this._cells[y*this.mx + x];
-    }
-
-    getXYFromCell(cellElement) {
-        const index = this._cells.indexOf(cellElement);
-        const x = index % this.mx;
-        const y = Math.floor(index / this.mx);
-        return [x, y];
     }
 
     step() {
