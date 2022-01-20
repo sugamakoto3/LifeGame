@@ -193,7 +193,7 @@ export class App {
         const code = this.encoding();
         const searchParams = new URLSearchParams(location.search);
         searchParams.set("code", this.mx + "x" + this.my + "x" + code.toString(16));
-        return location.host + location.pathname + "?" + searchParams;
+        return location.protocol + "//" + location.host + location.pathname + "?" + searchParams;
     }
 
     encoding() {
