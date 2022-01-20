@@ -54,9 +54,9 @@ export class App {
             this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
         }));
-        this.rootElement.querySelector(".lg-encode-button").addEventListener("click", () => {
+        this.rootElement.querySelector(".lg-sharelink-button").addEventListener("click", () => {
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
-            codeTextElement.value = this.encoding();
+            codeTextElement.value = this.getShareLink();
             codeTextElement.focus();
             codeTextElement.setSelectionRange(0,-1);
         });
@@ -189,39 +189,51 @@ export class App {
         }
     }
 
+    getShareLink() {
+        const code = this.encoding();
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set("code", this.mx + "x" + this.my + "x" + code.toString(16));
+        return location.host + location.pathname + "?" + searchParams;
+    }
+
     encoding() {
-        let res = this._cells;
-        res = res.map(c => c.classList.contains("lg-alive-cell"));
-        res = res.map(b => b ? 1n : 0n);
-        res = res.reduce((pre, cur) => (pre << 1n) + cur, 1n);
-        return this.mx + "x" + this.my + "x" + res.toString(16);
+        return this._cells
+            .map(c => c.classList.contains("lg-alive-cell"))
+            .map(b => b ? 1n : 0n)
+            .reduce((pre, cur) => (pre << 1n) + cur, 1n)
     }
 
     static loadBoardHTML() {
         const searchParams = new URLSearchParams(location.search);
         if (! searchParams.has("code")) return;
-        App.decoding(searchParams.get("code"));
-    }
-
-    static decoding(code) {
         const rootElement = document.querySelector(".life-game");
         const boardElement = rootElement.querySelector(".lg-board");
         //
+        const code = searchParams.get("code");
         let [mx, my, cells] = code.split("x");
         cells = BigInt("0x" + cells);
-        cells = cells.toString(2);
-        cells = Array.prototype.map.call(cells, s => Boolean(Number(s)));
-        cells.shift();
+        cells = App.decoding(cells);
         // init boardElement
         boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
         boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
         // clear and create
         boardElement.innerHTML = "";
-        for (const isBorn of cells) {
-            const cellElement = document.createElement("div");
-            if (isBorn) cellElement.classList.add("lg-alive-cell");
-            boardElement.appendChild(cellElement);
-        }
+        boardElement.appendChild(cells);
+    }
+
+    static decoding(code) {
+        return Array.from(code.toString(2))
+            .slice(1)
+            .map(s => Boolean(Number(s)))
+            .map(b => {
+                const cellElement = document.createElement("div");
+                if (b) cellElement.classList.add("lg-alive-cell");
+                return cellElement;
+            })
+            .reduce((pre, cur) => {
+                pre.appendChild(cur);
+                return pre;
+            }, document.createDocumentFragment())
     }
 }
 
