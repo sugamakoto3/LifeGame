@@ -90,8 +90,8 @@ export class App {
         for (const cellElement of this.boardElement.children) {
             this._cells[i++] = cellElement;
         }
-        // init _neighborsMatrix
-        this._neighborsMatrix = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
+        // init _populationMat
+        this._populationMat = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
                 if (! this.getCell(i, j).classList.contains("lg-alive-cell")) continue;
@@ -100,7 +100,7 @@ export class App {
                     const ny = j+dy;
                     if (nx < 0 || this.mx <= nx) continue;
                     if (ny < 0 || this.my <= ny) continue;
-                    this._neighborsMatrix[nx][ny]++;
+                    this._populationMat[nx][ny]++;
                 }
             }
         }
@@ -147,16 +147,16 @@ export class App {
     step() {
         const bornRule = Array.from("B3").map(Number);     // TODO
         const surviveRule = Array.from("S23").map(Number);
-        // _neighborsMatrix を覚えておく
-        const oldMatrix = new Array(this.mx).fill()
-            .map((_, i) => this._neighborsMatrix[i].slice());
+        // _populationMat を覚えておく
+        const oldMat = new Array(this.mx).fill()
+            .map((_, i) => this._populationMat[i].slice());
         //
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
-                const neighbors = oldMatrix[i][j];
-                if (bornRule.includes(neighbors)) {
+                const population = oldMat[i][j];
+                if (bornRule.includes(population)) {
                     this.changeCell(i, j, true);
-                } else if (surviveRule.includes(neighbors)) {
+                } else if (surviveRule.includes(population)) {
                 } else {
                     this.changeCell(i, j, false);
                 }
@@ -175,7 +175,7 @@ export class App {
         cellElement.classList.toggle("lg-alive-cell");
         // neighbors
         for (const [nx, ny] of this.generateNeighborsAt(x, y)) {
-            this._neighborsMatrix[nx][ny] += (isBorn ? 1 : -1);
+            this._populationMat[nx][ny] += (isBorn ? 1 : -1);
         }
     }
 
