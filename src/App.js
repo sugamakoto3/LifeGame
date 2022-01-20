@@ -90,7 +90,7 @@ export class App {
         for (const cellElement of this.boardElement.children) {
             this._cells[i++] = cellElement;
         }
-        // init _neighborNumMatrix
+        // init _neighborsMatrix
         this._neighborsMatrix = new Array(this.mx).fill().map(() => new Array(this.my).fill(0));
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
@@ -147,16 +147,16 @@ export class App {
     step() {
         const bornRule = Array.from("B3").map(Number);     // TODO
         const surviveRule = Array.from("S23").map(Number);
-        // _neighborMatrix を覚えておく
+        // _neighborsMatrix を覚えておく
         const oldMatrix = new Array(this.mx).fill()
             .map((_, i) => this._neighborsMatrix[i].slice());
         //
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
-                const neighbor = oldMatrix[i][j];
-                if (bornRule.includes(neighbor)) {
+                const neighbors = oldMatrix[i][j];
+                if (bornRule.includes(neighbors)) {
                     this.changeCell(i, j, true);
-                } else if (surviveRule.includes(neighbor)) {
+                } else if (surviveRule.includes(neighbors)) {
                 } else {
                     this.changeCell(i, j, false);
                 }
@@ -173,13 +173,19 @@ export class App {
         const cellElement = this.getCell(x, y);
         if (isBorn === cellElement.classList.contains("lg-alive-cell")) return;
         cellElement.classList.toggle("lg-alive-cell");
-        // neibor
+        // neighbors
+        for (const [nx, ny] of this.generateNeighborsAt(x, y)) {
+            this._neighborsMatrix[nx][ny] += (isBorn ? 1 : -1);
+        }
+    }
+
+    *generateNeighborsAt(x, y) {
         for (const [dx, dy] of _aroundVectors) {
             const nx = x+dx;
             const ny = y+dy;
             if (nx < 0 || this.mx <= nx) continue;
             if (ny < 0 || this.my <= ny) continue;
-            this._neighborsMatrix[nx][ny] = this._neighborsMatrix[nx][ny] + (isBorn ? 1 : -1);
+            yield [nx, ny];
         }
     }
 
