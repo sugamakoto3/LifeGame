@@ -212,6 +212,8 @@ export class App {
         }
     }
 
+    // ---- Encoding ----
+
     getShareLink() {
         const code = this.encoding();
         const searchParams = new URLSearchParams(location.search);
@@ -229,19 +231,17 @@ export class App {
     static loadBoardHTML() {
         const searchParams = new URLSearchParams(location.search);
         if (! searchParams.has("code")) return;
-        const rootElement = document.querySelector(".life-game");
-        const boardElement = rootElement.querySelector(".lg-board");
-        //
+        const _boardElement = document.querySelector(".life-game > .lg-board");
         const code = searchParams.get("code");
         let [mx, my, cells] = code.split("x");
         cells = BigInt("0x" + cells);
         cells = App.decoding(cells);
         // init boardElement
-        boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
-        boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
+        _boardElement.style["grid-template-columns"] = `repeat(${mx}, min-content)`;
+        _boardElement.style["grid-template-rows"] = `repeat(${my}, min-content)`;
         // clear and create
-        boardElement.innerHTML = "";
-        boardElement.appendChild(cells);
+        _boardElement.innerHTML = "";
+        _boardElement.appendChild(cells);
     }
 
     static decoding(code) {
@@ -259,11 +259,11 @@ export class App {
             }, document.createDocumentFragment())
     }
 
-    // history
+    // ---- History ----
 
     pushHistory() {
         this.history.push(this.encoding());
-        if (this.history.length > 10) this.history.shift();
+        if (this.history.length > 50) this.history.shift();
     }
 
     popHistory() {
