@@ -16,7 +16,6 @@ export class App {
 
     mount() {
         this.boardElement = this.rootElement.querySelector(".lg-board");
-        this.statusElement = this.rootElement.querySelector(".lg-status-bar");
         // Mount toolbar
         const playElement = this.rootElement.querySelector(".lg-play-button");
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
@@ -72,7 +71,7 @@ export class App {
             codeTextElement.setSelectionRange(0,-1);
         });
         // statusbar
-        this.statusElement.addEventListener("click", () => {
+        this.rootElement.querySelector(".lg-board-status").addEventListener("click", () => {
             this.setStatusBar("-x-", "animate__bounce");
         });
         // mouse Event
@@ -193,15 +192,16 @@ export class App {
     }
 
     setStatusBar(text, animationName="") {
-        this.statusElement.innerHTML = text;
+        const boardStatusElement = this.rootElement.querySelector(".lg-board-status");
+        boardStatusElement.innerHTML = text;
         if (!animationName) return;
         // animation
-        this.statusElement.classList.add("animate__animated", animationName);
+        boardStatusElement.classList.add("animate__animated", animationName);
         const removeClass = (event) => {
             event.stopPropagation();
-            this.statusElement.classList.remove("animate__animated", animationName);
+            boardStatusElement.classList.remove("animate__animated", animationName);
         }
-        this.statusElement.addEventListener("animationend", removeClass, {once: true});
+        boardStatusElement.addEventListener("animationend", removeClass, {once: true});
     }
 
     *generateNeighborsAt(x, y) {

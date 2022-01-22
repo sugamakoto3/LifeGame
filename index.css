@@ -35,6 +35,13 @@ body {
     width: 2.5em;
 }
 
+/* .status-bar */
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+}
+
 /* .lg-board */
 
 .lg-board {
