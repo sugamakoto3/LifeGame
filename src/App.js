@@ -4,6 +4,7 @@ export class App {
         //
         const that = this;
         this._cells = new Array();
+        this.history = [];
         /**
          * cellElementから呼ばれる。
          */
@@ -46,13 +47,18 @@ export class App {
             const my = Number(this.rootElement.querySelector(".lg-my-text").value);
             this.recreateBoardElement(mx, my);
             this.initBoard();
+            this.history = [];
         });
         this.rootElement.querySelectorAll(".lg-reset-button").forEach(e => e.addEventListener("click", () => {
             clearInterval(intervalID);
             intervalID = null;
             //
+            this.pushHistory();
             this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
+        }));
+        this.rootElement.querySelectorAll(".lg-back-button").forEach(e => e.addEventListener("click", () => {
+            this.popHistory();
         }));
         this.rootElement.querySelector(".lg-sharelink-button").addEventListener("click", () => {
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
@@ -141,6 +147,8 @@ export class App {
     }
 
     step() {
+        this.pushHistory();
+        // Rule
         const bornRule = Array.from("B3").map(Number);     // TODO
         const surviveRule = Array.from("S23").map(Number);
         // _populationMat を覚えておく
@@ -230,6 +238,23 @@ export class App {
                 pre.appendChild(cur);
                 return pre;
             }, document.createDocumentFragment())
+    }
+
+    pushHistory() {
+        this.history.push(this.encoding());
+        if (this.history.length > 10) this.history.shift();
+    }
+
+    popHistory() {
+        const code = this.history.pop();
+        if (code === undefined) {
+            //TODO show dialog
+            return;
+        }
+        const cells = App.decoding(code);
+        this.boardElement.innerHTML = "";
+        this.boardElement.appendChild(cells);
+        this.initBoard();
     }
 }
 
