@@ -18,6 +18,7 @@ export class App {
 
     mount() {
         this.boardElement = this.rootElement.querySelector(".lg-board");
+        this.statusElement = this.rootElement.querySelector(".lg-status-bar");
         // Mount toolbar
         const playElement = this.rootElement.querySelector(".lg-play-button");
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
@@ -189,6 +190,18 @@ export class App {
         }
     }
 
+    setStatusBar(text, animationName="") {
+        this.statusElement.innerHTML = text;
+        if (!animationName) return;
+        // animation
+        this.statusElement.classList.add("animate__animated", animationName);
+        const removeClass = (event) => {
+            event.stopPropagation();
+            this.statusElement.classList.remove("animate__animated", animationName);
+        }
+        this.statusElement.addEventListener("animationend", removeClass, {once: true});
+    }
+
     *generateNeighborsAt(x, y) {
         for (const [dx, dy] of _aroundVectors) {
             const nx = x+dx;
@@ -246,6 +259,8 @@ export class App {
             }, document.createDocumentFragment())
     }
 
+    // history
+
     pushHistory() {
         this.history.push(this.encoding());
         if (this.history.length > 10) this.history.shift();
@@ -254,7 +269,7 @@ export class App {
     popHistory() {
         const code = this.history.pop();
         if (code === undefined) {
-            //TODO show dialog
+            this.setStatusBar("No history", "animate__shakeX");
             return;
         }
         const cells = App.decoding(code);
