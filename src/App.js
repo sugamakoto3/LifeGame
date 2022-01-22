@@ -5,11 +5,9 @@ export class App {
         const that = this;
         this._cells = new Array();
         this.history = [];
-        /**
-         * cellElementから呼ばれる。
-         */
         this._getXY = function() {
-            const index = that._cells.indexOf(this);
+            const cellElement = this;   // cellElementから呼ばれる。
+            const index = that._cells.indexOf(cellElement);
             const x = index % that.mx;
             const y = Math.floor(index / that.mx);
             return [x, y];
@@ -72,6 +70,10 @@ export class App {
             codeTextElement.value = this.getShareLink();
             codeTextElement.focus();
             codeTextElement.setSelectionRange(0,-1);
+        });
+        // statusbar
+        this.statusElement.addEventListener("click", () => {
+            this.setStatusBar("-x-", "animate__bounce");
         });
         // mouse Event
         this.boardElement.addEventListener("mousedown", (event) => {
@@ -268,11 +270,11 @@ export class App {
             // 新しい状態
         } else if (reverseIndex === 0) {
             // 状態変わらず
-            this.setStatusBar("Stuck");
+            this.setStatusBar("Stuck", "animate__flash");
             return;
         } else {
             // ループしている
-            this.setStatusBar(`Detects loop; ${reverseIndex}`);
+            this.setStatusBar(`Detects loop; len${reverseIndex+1}`);
         }
         this.history.push(code);
         if (this.history.length > 50) this.history.shift();
@@ -281,7 +283,7 @@ export class App {
     popHistory() {
         const code = this.history.pop();
         if (code === undefined) {
-            this.setStatusBar("No history", "animate__shakeX");
+            this.setStatusBar("No history", "animate__headShake");
             return;
         }
         const cells = App.decoding(code);
@@ -296,7 +298,7 @@ const _aroundVectors = Array.from(new Array(9).keys())
     .filter(i => i!==4)
     .map(i => [(i%3), Math.floor(i/3)])
     .map(([dx, dy]) => [dx-1, dy-1])
-    ;
+;
 
 
 
