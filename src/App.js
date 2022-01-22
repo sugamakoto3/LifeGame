@@ -269,7 +269,7 @@ export class App {
     pushHistory() {
         const code = this.encoding();
         const index = this.history.lastIndexOf(code);
-        if (index < 0) {
+        if (index === -1) {
             // 新しい状態
         } else if (index === this.history.length-1) {
             // 状態変わらず
@@ -278,7 +278,7 @@ export class App {
         } else {
             // ループしている
             const loopLength = this.history.length - index;
-            this.setStatusBar(`Detects loop; len${loopLength}`);
+            this.setStatusBar(`Loop is detected; len${loopLength}`);
         }
         this.history.push(code);
         if (this.history.length > 50) this.history.shift();
