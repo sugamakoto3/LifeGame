@@ -11,9 +11,9 @@
       <h1>Beacon</h1>
       <div class="toolbar">
         <div>
-          <input class="lg-mx-text" type="number" min=1 max=50 value="6">
+          <input class="lg-mx-text" type="number" min=1 max=50 value="15">
           x
-          <input class="lg-my-text" type="number" min=1 max=50 value="6">
+          <input class="lg-my-text" type="number" min=1 max=50 value="15">
           <button class="lg-create-button">生成</button>
         </div>
         <div>
@@ -31,13 +31,17 @@
           <button class="lg-play-button">>></button>
         </div>
       </div>
-      <div class="lg-board" style="grid-template-columns: repeat(6, min-content); grid-template-rows: repeat(6, min-content);">
-        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
-        <div></div> <div class="lg-alive-cell"></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div>
-        <div></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div> <div></div>
-        <div></div> <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div></div>
-        <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div class="lg-alive-cell"></div> <div></div>
-        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+      <div class="lg-board" style="grid-template-columns: repeat(10, min-content); grid-template-rows: repeat(10, min-content);">
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div class="lg-alive-cell"></div> <div class="lg-alive-cell"></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
+        <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div> <div></div>
       </div>
       <div class="lg-status-bar">
         status: 1
