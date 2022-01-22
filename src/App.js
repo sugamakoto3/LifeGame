@@ -95,11 +95,7 @@ export class App {
         for (let i = 0; i < this.mx; i++) {
             for (let j = 0; j < this.my; j++) {
                 if (! this.getCell(i, j).classList.contains("lg-alive-cell")) continue;
-                for (const [dx, dy] of _aroundVectors) {
-                    const nx = i+dx;
-                    const ny = j+dy;
-                    if (nx < 0 || this.mx <= nx) continue;
-                    if (ny < 0 || this.my <= ny) continue;
+                for (const [nx, ny] of this.generateNeighborsAt(i, j)) {
                     this._populationMat[nx][ny]++;
                 }
             }
