@@ -265,16 +265,17 @@ export class App {
 
     pushHistory() {
         const code = this.encoding();
-        const reverseIndex = this.history.slice().reverse().indexOf(code);
-        if (reverseIndex < 0) {
+        const index = this.history.lastIndexOf(code);
+        if (index < 0) {
             // 新しい状態
-        } else if (reverseIndex === 0) {
+        } else if (index === this.history.length-1) {
             // 状態変わらず
             this.setStatusBar("Stuck", "animate__flash");
             return;
         } else {
             // ループしている
-            this.setStatusBar(`Detects loop; len${reverseIndex+1}`);
+            const loopLength = this.history.length - index;
+            this.setStatusBar(`Detects loop; len${loopLength}`);
         }
         this.history.push(code);
         if (this.history.length > 50) this.history.shift();
