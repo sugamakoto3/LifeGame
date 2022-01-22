@@ -21,14 +21,17 @@ export class App {
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
         playElement.focus();
         let intervalID = null;
+        const playStatusElement = this.rootElement.querySelector(".lg-play-status");
         const playInterval = () => {
             if(intervalID !== null) return;
             this.step();
             intervalID = setInterval(() => this.step(), 500);
+            playStatusElement.innerHTML = "...Playing";
         };
         const pauseInterval = () => {
             clearInterval(intervalID);
             intervalID = null;
+            playStatusElement.innerHTML = "Pause";
         };
 
         playElement.addEventListener("click", () => {
