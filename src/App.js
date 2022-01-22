@@ -194,8 +194,8 @@ export class App {
 
     encoding() {
         return this._cells
-            .map(c => c.classList.contains("lg-alive-cell"))
-            .map(b => b ? 1n : 0n)
+            .map(cell => cell.classList.contains("lg-alive-cell"))
+            .map(bool => bool ? 1n : 0n)
             .reduce((pre, cur) => (pre << 1n) + cur, 1n)
     }
 
@@ -220,11 +220,11 @@ export class App {
     static decoding(code) {
         return Array.from(code.toString(2))
             .slice(1)
-            .map(s => Boolean(Number(s)))
-            .map(b => {
-                const cellElement = document.createElement("div");
-                if (b) cellElement.classList.add("lg-alive-cell");
-                return cellElement;
+            .map(str => Boolean(Number(str)))
+            .map(bool => {
+                const cell = document.createElement("div");
+                if (bool) cell.classList.add("lg-alive-cell");
+                return cell;
             })
             .reduce((pre, cur) => {
                 pre.appendChild(cur);
