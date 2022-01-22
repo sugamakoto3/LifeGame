@@ -262,7 +262,19 @@ export class App {
     // ---- History ----
 
     pushHistory() {
-        this.history.push(this.encoding());
+        const code = this.encoding();
+        const reverseIndex = this.history.slice().reverse().indexOf(code);
+        if (reverseIndex < 0) {
+            // 新しい状態
+        } else if (reverseIndex === 0) {
+            // 状態変わらず
+            this.setStatusBar("Stuck");
+            return;
+        } else {
+            // ループしている
+            this.setStatusBar(`Detects loop; ${reverseIndex}`);
+        }
+        this.history.push(code);
         if (this.history.length > 50) this.history.shift();
     }
 
