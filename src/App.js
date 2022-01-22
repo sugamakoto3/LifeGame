@@ -21,27 +21,32 @@ export class App {
         // Mount toolbar
         const playElement = this.rootElement.querySelector(".lg-play-button");
         const pauseElement = this.rootElement.querySelector(".lg-pause-button");
+        playElement.focus();
         let intervalID = null;
-        playElement.addEventListener("click", () => {
+        const playInterval = () => {
             if(intervalID !== null) return;
             this.step();
             intervalID = setInterval(() => this.step(), 500);
+        };
+        const pauseInterval = () => {
+            clearInterval(intervalID);
+            intervalID = null;
+        };
+
+        playElement.addEventListener("click", () => {
+            playInterval();
             pauseElement.focus();
         });
         pauseElement.addEventListener("click", () => {
-            clearInterval(intervalID);
-            intervalID = null;
+            pauseInterval();
             playElement.focus();
         });
-        playElement.focus();
         this.rootElement.querySelector(".lg-step-button").addEventListener("click", () => {
+            pauseInterval();
             this.step();
-            clearInterval(intervalID);
-            intervalID = null;
         });
         this.rootElement.querySelector(".lg-create-button").addEventListener("click", () => {
-            clearInterval(intervalID);
-            intervalID = null;
+            pauseInterval();
             //
             const mx = Number(this.rootElement.querySelector(".lg-mx-text").value);
             const my = Number(this.rootElement.querySelector(".lg-my-text").value);
@@ -50,17 +55,18 @@ export class App {
             this.history = [];
         });
         this.rootElement.querySelectorAll(".lg-reset-button").forEach(e => e.addEventListener("click", () => {
-            clearInterval(intervalID);
-            intervalID = null;
+            pauseInterval();
             //
             this.pushHistory();
             this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
         }));
         this.rootElement.querySelectorAll(".lg-back-button").forEach(e => e.addEventListener("click", () => {
+            pauseInterval();
             this.popHistory();
         }));
         this.rootElement.querySelector(".lg-sharelink-button").addEventListener("click", () => {
+            pauseInterval();
             const codeTextElement = this.rootElement.querySelector(".lg-code-text");
             codeTextElement.value = this.getShareLink();
             codeTextElement.focus();
