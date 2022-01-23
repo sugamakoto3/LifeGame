@@ -292,7 +292,7 @@ export class App {
             this.setStatusBar(`Loop is detected; len${loopLength}`);
         }
         this.history.push(code);
-        if (this.history.length > 50) this.history.shift();
+        if (this.history.length > 100) this.history.shift();
     }
 
     popHistory() {
