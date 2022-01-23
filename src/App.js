@@ -42,9 +42,13 @@ export class App {
             pauseInterval();
             playElement.focus();
         });
-        this.rootElement.querySelector(".lg-step-button").addEventListener("click", () => {
+        this.rootElement.querySelector(".lg-step-button").addEventListener("mousedown", () => {
             pauseInterval();
             this.step();
+        });
+        this.rootElement.querySelector(".lg-back-button").addEventListener("mousedown", () => {
+            pauseInterval();
+            this.popHistory();
         });
         this.rootElement.querySelector(".lg-create-button").addEventListener("click", () => {
             pauseInterval();
@@ -61,10 +65,6 @@ export class App {
             this.pushHistory();
             this.recreateBoardElement(this.mx, this.my);
             this.initBoard();
-        }));
-        this.rootElement.querySelectorAll(".lg-back-button").forEach(e => e.addEventListener("click", () => {
-            pauseInterval();
-            this.popHistory();
         }));
         this.rootElement.querySelector(".lg-sharelink-button").addEventListener("click", () => {
             pauseInterval();
