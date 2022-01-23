@@ -236,7 +236,7 @@ export class App {
     static loadBoardHTML() {
         const searchParams = new URLSearchParams(location.search);
         if (! searchParams.has("code")) return;
-        const _boardElement = document.querySelector(".life-game > .lg-board");
+        const _boardElement = document.querySelector(".life-game .lg-board");
         const code = searchParams.get("code");
         let [mx, my, cells] = code.split("x");
         cells = BigInt("0x" + cells);
@@ -247,6 +247,11 @@ export class App {
         // clear and create
         _boardElement.innerHTML = "";
         _boardElement.appendChild(cells);
+        // init toolbar
+        const _mxTextElement = document.querySelector(".life-game .lg-mx-text");
+        const _myTextElement = document.querySelector(".life-game .lg-my-text");
+        _mxTextElement.value = mx;
+        _myTextElement.value = my;
     }
 
     static decoding(code) {
