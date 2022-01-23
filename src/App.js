@@ -330,7 +330,7 @@ HTMLElement.prototype.addHoldLister = function(callback, holdtime=500, tick=125)
             }
         }, tick);
     });
-    this.addEventListener("mouseup", () => {
+    document.addEventListener("mouseup", () => {
         clearInterval(intervalID);
         intervalID = null;
     });
