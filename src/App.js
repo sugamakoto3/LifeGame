@@ -221,6 +221,7 @@ export class App {
 
     getShareLink() {
         const code = this.encoding();
+        console.info(code);
         const searchParams = new URLSearchParams(location.search);
         searchParams.set("code", this.mx + "x" + this.my + "x" + code.toString(16));
         return location.protocol + "//" + location.host + location.pathname + "?" + searchParams;
