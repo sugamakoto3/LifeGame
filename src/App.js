@@ -78,18 +78,23 @@ export class App {
             this.setStatusBar("-x-", "animate__bounce");
         });
         // mouse Event
-        this.boardElement.addEventListener("mousedown", (event) => {
-            if (event.buttons !== 1) return;
+        this.boardElement.addEventListener("contextmenu", (e) => e.preventDefault());
+        const mouseEventHandler = (event) => {
+            if (! event.buttons & 0b111) return;
             if (event.target.classList.contains("lg-board")) return;
-            const [x, y] = this._getXY.call(event.target);
-            this.toggleCell(x, y);
-        });
-        this.boardElement.addEventListener("mouseenter", (event) => {
-            if (event.buttons !== 1) return;
-            if (event.target.classList.contains("lg-board")) return;
-            const [x, y] = this._getXY.call(event.target);
-            this.toggleCell(x, y);
-        }, {capture: true});
+            if (event.buttons & 0b001) {
+                const [x, y] = this._getXY.call(event.target);
+                this.changeCell(x, y, true);
+            } else if (event.buttons & 0b010) {
+                const [x, y] = this._getXY.call(event.target);
+                this.changeCell(x, y, false);
+            } else if (event.buttons & 0b100) {
+                const [x, y] = this._getXY.call(event.target);
+                this.toggleCell(x, y);
+            }
+        };
+        this.boardElement.addEventListener("mousedown", mouseEventHandler);
+        this.boardElement.addEventListener("mouseenter", mouseEventHandler, {capture: true});
         // init board
         this.initBoard();
     }
@@ -311,4 +316,7 @@ const _aroundVectors = Array.from(new Array(9).keys())
 ;
 
 
+
+
+//TODO "boardElement > div" の規定のドラッグ処理が邪魔。
 
