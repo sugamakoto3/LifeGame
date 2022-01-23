@@ -42,11 +42,11 @@ export class App {
             pauseInterval();
             playElement.focus();
         });
-        this.rootElement.querySelector(".lg-step-button").addEventListener("mousedown", () => {
+        this.rootElement.querySelector(".lg-step-button").addHoldLister(() => {
             pauseInterval();
             this.step();
         });
-        this.rootElement.querySelector(".lg-back-button").addEventListener("mousedown", () => {
+        this.rootElement.querySelector(".lg-back-button").addHoldLister(() => {
             pauseInterval();
             this.popHistory();
         });
@@ -315,8 +315,29 @@ const _aroundVectors = Array.from(new Array(9).keys())
     .map(([dx, dy]) => [dx-1, dy-1])
 ;
 
+HTMLElement.prototype.addHoldLister = function(callback, holdtime=500, tick=125) {
+    let intervalID = null;
+    this.addEventListener("mousedown", () => {
+        if (intervalID !== null) return;
+        callback();
+        let time = 0;
+        time += tick;
+        intervalID = setInterval(() => {
+            if (time >= holdtime) {
+                callback();
+            } else {
+                time += tick;
+            }
+        }, tick);
+    });
+    this.addEventListener("mouseup", () => {
+        clearInterval(intervalID);
+        intervalID = null;
+    });
+};
 
 
 
 //TODO "boardElement > div" の規定のドラッグ処理が邪魔。
+//TODO 鏡モード
 
