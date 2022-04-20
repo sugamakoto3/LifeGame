@@ -4,8 +4,8 @@
     , "display": "standalone"
     , "icons": [
         { 
-            "src": "img/Matreshka.ico"
-            , "sizes": ""
+            "src": "img/png.png"
+            , "sizes": "256x256"
         }
     ]
     , "start_url": "/?code=5x5x2000000"
