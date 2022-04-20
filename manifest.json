@@ -1,0 +1,5 @@
+{ "name": "Sphere Blur"
+, "short_name": "Sphere Blur"
+, "display": "standalone"
+, "start_url": "/?code=5x5x2000000"
+}
