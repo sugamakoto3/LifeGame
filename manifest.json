@@ -1,6 +1,6 @@
 { 
-    "name": "Sphere Blur"
-    , "short_name": "Sphere Blur"
+    "name": "Life Game"
+    , "short_name": "Life Game"
     , "display": "standalone"
     , "icons": [
         { 
