@@ -1,5 +1,12 @@
-{ "name": "Sphere Blur"
-, "short_name": "Sphere Blur"
-, "display": "standalone"
-, "start_url": "/?code=5x5x2000000"
+{ 
+    "name": "Sphere Blur"
+    , "short_name": "Sphere Blur"
+    , "display": "standalone"
+    , "icons": [
+        { 
+            "src": "img/Matreshka.ico"
+            , "sizes": ""
+        }
+    ]
+    , "start_url": "/?code=5x5x2000000"
 }
